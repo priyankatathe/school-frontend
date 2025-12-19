@@ -1,5 +1,5 @@
 import React from "react"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route, HashRouter } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/ReactToastify.css"
 
@@ -46,7 +46,7 @@ const NotFound = () => <h1 className="text-center mt-10 text-2xl font-bold">Page
 
 const App = () => {
   return <>
-    <BrowserRouter>
+    <HashRouter>
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -108,7 +108,7 @@ const App = () => {
         {/* Fallback */}
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   </>
 }
 
