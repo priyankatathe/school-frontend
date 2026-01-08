@@ -70,15 +70,14 @@ export const authApi = createApi({
 
             // Cleark 
             registerCleark: builder.mutation({
-                query: (userData) => {
-                    return {
-                        url: "/cleark-register",
-                        method: "POST",
-                        body: userData
-                    }
-                },
-                providesTags: ["auth"]
+                query: userData => ({
+                    url: "/cleark-register",
+                    method: "POST",
+                    body: userData
+                }),
+                invalidatesTags: ["auth"]
             }),
+
             loginCleark: builder.mutation({
                 query: userData => {
                     return {

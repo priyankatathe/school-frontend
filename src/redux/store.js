@@ -6,6 +6,8 @@ import { functionApi } from "./api/functionApi";
 import { staffApi } from "./api/staffApi";
 import { studentApi } from "./api/studentApi";
 import { galleryApi } from "./api/galleryApi";
+import { contactApi } from "./api/contactApi";
+import { addFormApi } from "./api/addFormApi";
 
 
 
@@ -18,6 +20,8 @@ const reduxStore = configureStore({
         [staffApi.reducerPath]: staffApi.reducer,
         [studentApi.reducerPath]: studentApi.reducer,
         [galleryApi.reducerPath]: galleryApi.reducer,
+        [contactApi.reducerPath]: contactApi.reducer,
+        [addFormApi.reducerPath]: addFormApi.reducer,
         Auth: authSlice
 
     },
@@ -27,7 +31,9 @@ const reduxStore = configureStore({
     functionApi.middleware,
     staffApi.middleware,
     studentApi.middleware,
-    galleryApi.middleware
+    galleryApi.middleware,
+    contactApi.middleware,
+    addFormApi.middleware
 
     ]
 })

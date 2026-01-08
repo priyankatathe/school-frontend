@@ -1,52 +1,134 @@
-import React from 'react'
-import { useState } from 'react';
-import { FaUserGraduate } from "react-icons/fa";
-import { HiOutlineDotsVertical } from "react-icons/hi";
-
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { FaUserGraduate, FaBars, FaTimes } from "react-icons/fa";
+import { Link, useLocation } from 'react-router-dom';
+import Contact from '../pages/Contact';
 
 const Navbar = () => {
-    // const [nav, setNav] = useState("")
-    return <>
-        <div className=' bg-neutral-600 w-full  '>
-            <nav className=' bg-white p-4'>
-                <div className=' grid grid-cols-1 md:grid-cols-3 items-center gap-4'>
+    const [openContact, setOpenContact] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+    const location = useLocation();
 
-                    <div className='flex items-center gap-2 justify-center md:justify-start'>
-                        <h1 className='text-2xl font-extrabold p-1 mr-2 hover:text-cyan-500 '><FaUserGraduate /></h1>
-                        <h1 className='text-xl md:text-2xl text-gray-950 font-extrabold  hover:text-cyan-500'> DIGITAL ALCHEMY ACADMY</h1>
-                    </div>
-                    <div>
-                        <ul className='hidden  md:flex gap-6 text-black font-bold justify-center '>
-                            <Link to="/" className='hover:text-cyan-500'>Home</Link>
-                            <Link to="about" className='hover:text-cyan-500'>About</Link>
-                            <Link to="staff" className='hover:text-cyan-500'>SchoollStaff</Link>
-                            <Link to="gallery" className='hover:text-cyan-500'>Gallery</Link>
-                            <Link to="contact" className='hover:text-cyan-500'>Contact</Link>
-                        </ul>
-                    </div>
-                    <div className='hidden md:flex justify-end'>
-                        <Link to="add" className="btn btn-neutral btn-outline">Addmission Form</Link>
-                    </div>
-                    {/* show md creen only */}
-                    <div className="md:hidden mt-4">
+    // Scroll effect for professional glassmorphism
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 20);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
-                        <div className="flex flex-col gap-2 p-4 text-center font-semibold text-black">
-                            <Link to="/" className="hover:text-cyan-500">Home</Link>
-                            <Link to="/about" className="hover:text-cyan-500">About</Link>
-                            <Link to="/gallery" className="hover:text-cyan-500">Gallery</Link>
-                            <Link to="/contact" className="hover:text-cyan-500">Contact</Link>
-                            <Link to="/add" className="btn btn-neutral btn-outline mx-auto mt-2">Admission Form</Link>
+    const navLinks = [
+        { name: 'Home', path: '/' },
+        { name: 'About', path: '/about' },
+        { name: 'Staff', path: '/staff' },
+        { name: 'Gallery', path: '/gallery' },
+    ];
+
+    return (
+        <>
+            <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+                scrolled 
+                ? 'bg-white/80 backdrop-blur-md shadow-lg py-2' 
+                : 'bg-white py-4'
+            }`}>
+                <div className='max-w-7xl mx-auto px-6 flex items-center justify-between'>
+                    
+                    {/* LOGO SECTION */}
+                    <Link to="/" className='flex items-center gap-3 group'>
+                        <div className='bg-cyan-500 p-2 rounded-lg text-white group-hover:rotate-12 transition-transform shadow-lg shadow-cyan-200'>
+                            <FaUserGraduate size={24} />
                         </div>
+                        <span className='text-lg md:text-xl font-black tracking-tighter text-slate-900'>
+                            DIGITAL <span className='text-cyan-500'>ALCHEMY</span> ACADEMY
+                        </span>
+                    </Link>
+
+                    {/* DESKTOP NAV LINKS */}
+                    <ul className='hidden lg:flex items-center gap-8'>
+                        {navLinks.map((link) => (
+                            <Link 
+                                key={link.path}
+                                to={link.path} 
+                                className={`text-sm font-bold uppercase tracking-widest transition-colors ${
+                                    location.pathname === link.path ? 'text-cyan-500' : 'text-slate-600 hover:text-cyan-500'
+                                }`}
+                            >
+                                {link.name}
+                            </Link>
+                        ))}
+                        <button
+                            onClick={() => setOpenContact(true)}
+                            className='text-sm font-bold uppercase tracking-widest text-slate-600 hover:text-cyan-500 transition-colors'
+                        >
+                            Contact
+                        </button>
+                    </ul>
+
+                    {/* ACTIONS */}
+                    <div className='hidden lg:flex items-center gap-4'>
+                        <Link 
+                            to="/add" 
+                            className="bg-slate-900 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-cyan-500 transition-all shadow-md active:scale-95"
+                        >
+                            Admission Open
+                        </Link>
                     </div>
 
+                    {/* MOBILE TOGGLE */}
+                    <button 
+                        className='lg:hidden text-slate-900 p-2'
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    >
+                        {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+                    </button>
                 </div>
-            </nav >
-        </div >
 
+                {/* MOBILE MENU DRAWER */}
+                <div className={`lg:hidden absolute top-full left-0 w-full bg-white border-t transition-all duration-300 overflow-hidden ${
+                    isMobileMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
+                }`}>
+                    <div className='p-6 flex flex-col gap-4 text-center'>
+                        {navLinks.map((link) => (
+                            <Link 
+                                key={link.path}
+                                to={link.path} 
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className='text-lg font-bold text-slate-700 hover:text-cyan-500'
+                            >
+                                {link.name}
+                            </Link>
+                        ))}
+                        <button
+                            onClick={() => {
+                                setOpenContact(true);
+                                setIsMobileMenuOpen(false);
+                            }}
+                            className='text-lg font-bold text-slate-700 hover:text-cyan-500'
+                        >
+                            Contact
+                        </button>
+                        <Link 
+                            to="/add" 
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="bg-cyan-500 text-white px-6 py-3 rounded-xl font-bold mt-2"
+                        >
+                            Admission Form
+                        </Link>
+                    </div>
+                </div>
+            </nav>
 
-    </>
+            {/* Spacer for sticky nav */}
+            <div className='h-20'></div>
 
-}
+            {/* CONTACT POPUP */}
+            <Contact
+                open={openContact}
+                onClose={() => setOpenContact(false)}
+            />
+        </>
+    );
+};
 
-export default Navbar
+export default Navbar;

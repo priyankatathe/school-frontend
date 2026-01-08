@@ -19,10 +19,6 @@ import PhotoNcc from "./pages/department/PhotoNcc"
 // Admin Pages & Protected
 import AdminLayout from "./admin/AdminLayout"
 import AdminProfile from "./admin/AdminProfile"
-import ClearkRegister from "./admin/ClearkRegister"
-import FunctionForm from "./admin/FunctionForm"
-import DepartmentForm from "./admin/DepartmentForm"
-import StaffForm from "./admin/StaffForm"
 import AllDepartmentL from "./admin/AllDepartmentL"
 import FunctionList from "./admin/FunctionList"
 import StaffList from "./admin/StaffList"
@@ -34,12 +30,10 @@ import AdminProtected from "./midllware/AdminProtected"
 // Cleark Pages & Protected
 import ClearkLayout from "./cleark/ClearkLayout"
 import ClearkProfile from "./cleark/ClearkProfile"
-import AddStud from "./cleark/AddStud"
 import StudentLinst from "./cleark/StudentLinst"
 import ClearkLogin from "./cleark/ClearkLogin"
 import ClearkProtected from "./midllware/ClearkProtected"
 import SchoolStaff from "./pages/SchoolStaff"
-import AddGalleryForm from "./admin/AddGalleryForm"
 
 // NotFound fallback
 const NotFound = () => <h1 className="text-center mt-10 text-2xl font-bold">Page Not Found</h1>
@@ -82,22 +76,16 @@ const App = () => {
         {/* Admin Protected Routes */}
         <Route path="/admin" element={<AdminProtected compo={<AdminLayout />} />}>
           <Route index element={<AdminProfile />} />
-          <Route path="cleark-register" element={<ClearkRegister />} />
-          <Route path="function-form" element={<FunctionForm />} />
-          <Route path="department-form" element={<DepartmentForm />} />
-          <Route path="staff-form" element={<StaffForm />} />
           <Route path="department-list" element={<AllDepartmentL />} />
           <Route path="function-list" element={<FunctionList />} />
           <Route path="staff-list" element={<StaffList />} />
           <Route path="cleark-list" element={<AllCleark />} />
           <Route path="gallery-list" element={<GalleryList />} />
-          <Route path="gallery-add" element={<AddGalleryForm />} />
         </Route>
 
         {/* Cleark Protected Routes */}
         <Route path="/cleark" element={<ClearkProtected compo={<ClearkLayout />} />}>
           <Route index element={<ClearkProfile />} />
-          <Route path="add-student" element={<AddStud />} />
           <Route path="student-list" element={<StudentLinst />} />
         </Route>
 

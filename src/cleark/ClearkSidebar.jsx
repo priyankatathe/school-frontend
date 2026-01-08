@@ -1,90 +1,114 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { BsPeopleFill } from 'react-icons/bs';
-import { FaUserAlt, FaBars, FaSignOutAlt } from 'react-icons/fa'
+import { FaSignOutAlt } from 'react-icons/fa';
 import { HiMenu, HiX } from 'react-icons/hi';
 import { MdDashboard } from 'react-icons/md';
-
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLogoutClearkMutation } from '../redux/api/authApi';
 
 const LINKS = [
-    { label: "Admin-Profile", to: "/cleark", icon: MdDashboard, color: "text-blue-500 bg-blue-100" },
-    { label: "Department", to: "/cleark/student-list", icon: BsPeopleFill, color: "text-green-500 bg-green-100" },
-
+    { label: "Cleark Profile", to: "/cleark", icon: MdDashboard, color: "text-blue-600 bg-blue-50" },
+    { label: "Student Detail", to: "/cleark/student-list", icon: BsPeopleFill, color: "text-emerald-600 bg-emerald-50" },
 ];
 
 const ClearkSidebar = () => {
+    const [logoutCleark, { isSuccess }] = useLogoutClearkMutation();
+    const navigate = useNavigate();
+
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
 
     const toggleSidebar = () => setIsOpen(!isOpen);
-
+    useEffect(() => {
+        if (isSuccess) {
+            toast.success("Logged out successfully!");
+            navigate("/cleark-login");
+        }
+    }, [isSuccess, navigate]);
     const renderLink = (item, idx) => {
         const isActive = location.pathname === item.to;
         const Icon = item.icon;
 
         return (
-            <div key={idx} className="relative">
+            <div key={idx} className="px-3">
                 <Link
                     to={item.to}
                     onClick={() => isOpen && toggleSidebar()}
-                    className={`flex items-center gap-3 px-4 py-2 my-1 mx-2 rounded-lg transition-all duration-200 
+                    className={`flex items-center gap-3 px-3 py-2.5 my-1 rounded-xl transition-all duration-300 group
                 ${isActive
-                            ? "bg-green-100 text-green-700 font-semibold shadow-sm"
-                            : "text-gray-700 hover:bg-gray-100 hover:text-green-600"
+                            ? "bg-emerald-600 text-white shadow-lg shadow-emerald-200"
+                            : "text-slate-600 hover:bg-slate-50 hover:text-emerald-600"
                         }`}
                 >
                     <div
-                        className={`p-2 rounded-md flex items-center justify-center ${item.color}`}
+                        className={`p-2 rounded-lg flex items-center justify-center transition-colors duration-300 
+                        ${isActive ? "bg-white/20 text-white" : item.color}`}
                     >
-                        <Icon size={18} />
+                        <Icon size={20} />
                     </div>
-                    <span className="text-sm font-medium">{item.label}</span>
+                    <span className={`text-[15px] font-semibold tracking-wide ${isActive ? "opacity-100" : "opacity-80 group-hover:opacity-100"}`}>
+                        {item.label}
+                    </span>
                 </Link>
-                {isActive && (
-                    <span className="absolute right-3 top-1/2 transform -translate-y-1/2 h-6 w-1 bg-green-500 rounded-l-md"></span>
-                )}
             </div>
         );
     };
 
     return (
         <>
-            {/* ----------- Mobile Hamburger ----------- */}
-            <div className="md:hidden fixed top-4 left-4 z-50">
-                <button onClick={toggleSidebar}>
-                    {isOpen ? <HiX size={28} className="text-green-600" /> : <HiMenu size={28} className="text-green-600" />}
+            {/* ----------- Mobile Header / Hamburger ----------- */}
+            <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b flex items-center px-4 z-50">
+                <button
+                    onClick={toggleSidebar}
+                    className="p-2 rounded-lg bg-slate-50 text-emerald-600 hover:bg-emerald-100 transition-colors"
+                >
+                    {isOpen ? <HiX size={24} /> : <HiMenu size={24} />}
                 </button>
+                <span className="ml-4 font-bold text-slate-800 text-lg">Admin Portal</span>
             </div>
 
             {/* ----------- Sidebar ----------- */}
             <div
-                className={`fixed top-0 left-0 h-full w-64 bg-white shadow-xl border-r border-gray-200 z-50 
-              transform transition-transform duration-300 flex flex-col
-              ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:w-[260px]`}
+                className={`fixed top-0 left-0 h-full w-64 bg-white  z-50 
+              transform transition-all duration-300 ease-in-out flex flex-col border-r border-slate-100
+              ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:w-[280px]`}
             >
-                {/* Header */}
-                <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white h-16 flex items-center justify-center text-lg font-bold tracking-wide">
-                    Admin Detail
+                {/* Header Section */}
+                <div className="p-6">
+                    <div className="flex items-center gap-3 bg-gradient-to-br from-emerald-500 to-teal-700 p-4 rounded-2xl shadow-inner">
+                        <div className="bg-white/20 p-2 rounded-lg backdrop-blur-md">
+                            <MdDashboard className="text-white" size={24} />
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-white font-bold leading-tight tracking-tight text-lg">Cleark Details</span>
+                            <span className="text-emerald-100 text-[11px] uppercase tracking-widest font-medium">Management</span>
+                        </div>
+                    </div>
                 </div>
 
-                {/* Links */}
-                <div className="flex-grow overflow-y-auto mt-4">{LINKS.map(renderLink)}</div>
+                {/* Navigation Links */}
+                <div className="flex-grow overflow-y-auto pt-2 space-y-1 custom-scrollbar">
+                    <p className="px-7 text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Main Menu</p>
+                    {LINKS.map(renderLink)}
+                </div>
 
-                {/* Logout fixed at bottom */}
-                <div className="mt-auto px-4 py-4">
+                {/* Footer Section (Logout) */}
+                <div className="p-6 border-t border-slate-50">
                     <button
-                        onClick={() => alert("Logout Clicked")}
-                        className="w-full flex items-center justify-center gap-2 bg-red-600 text-white py-2 rounded-lg transition hover:bg-red-700"
+                        onClick={() => logoutCleark()}
+                        className="group w-full flex items-center justify-center gap-3 bg-slate-50 text-slate-600 font-bold py-3 rounded-xl transition-all duration-300 hover:bg-red-50 hover:text-red-600 border border-transparent hover:border-red-100"
                     >
-                        <FaSignOutAlt /> Logout
+                        <FaSignOutAlt className="group-hover:-translate-x-1 transition-transform" />
+                        <span className="text-sm uppercase tracking-wider">Sign Out</span>
                     </button>
+
                 </div>
             </div>
 
-            {/* Overlay for Mobile */}
+            {/* Overlay for Mobile with Blur */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-black bg-opacity-40 z-40 md:hidden"
+                    className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 md:hidden transition-opacity"
                     onClick={toggleSidebar}
                 />
             )}
@@ -92,4 +116,4 @@ const ClearkSidebar = () => {
     );
 }
 
-export default ClearkSidebar
+export default ClearkSidebar;

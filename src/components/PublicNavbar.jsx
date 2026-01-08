@@ -8,9 +8,9 @@ import Footer from '../pages/Footer'
 const PublicNavbar = () => {
     return <>
 
+        <Navbar />
         <HeadL />
         <TopNavbar />
-        <Navbar />
         <Outlet />
         <Footer />
     </>
